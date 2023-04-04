@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
 import './App.css'
 
 // TODO:
@@ -17,8 +16,8 @@ function App() {
   const sandTop = useRef(null)
   const sandBottom = useRef(null)
 
-  // map a value from 37 to 356 hue, 56 to 72 sat
-  const hue = 0 + (timePercent * (37))
+  // map a value from 37 to 0 hue, 56 to 72 sat
+  const hue = timePercent * 37
   const saturation = (56 - (56-72)) + (timePercent * (56-72))
 
   // convert our seconds into minutes:seconds
@@ -52,6 +51,8 @@ function App() {
       return
     }
 
+    sandTop.current.style.setProperty('--speed', '150ms')
+    sandBottom.current.style.setProperty('--speed', '150ms')
     setTimeStart(timeValue)
     setTimeLeft(timeValue)
     setIsRunning(false)
@@ -63,8 +64,18 @@ function App() {
     sandTop.current.style.setProperty('--speed', '150ms')
     sandBottom.current.style.setProperty('--speed', '150ms')
     setTimeLeft(timeReversed)
+  }
 
-    if (!isRunning) {
+  function handleToggle() {
+    if (isRunning) {
+      sandTop.current.style.setProperty('--hue', 175)
+      sandTop.current.style.setProperty('--saturation', '62%')
+      sandTop.current.style.setProperty('--speed', '150ms')
+      sandBottom.current.style.setProperty('--hue', 175)
+      sandTop.current.style.setProperty('--saturation', '62%')
+      sandBottom.current.style.setProperty('--speed', '150ms')
+      setIsRunning(false)
+    } else {
       setIsRunning(true)
     }
   }
@@ -84,18 +95,23 @@ function App() {
         <p className="time-display__readout">{minutes}:{seconds}</p>
       </div>
 
+      <div className="time-display time-display--inverted">
+        <p className="time-display__readout">{minutes}:{seconds}</p>
+      </div>
+
       <form className="time-input" action="" onSubmit={handleSubmit}>
         <input id="timeEntry" className="time-input__input time-input__minutes" name="minutes" type="number" placeholder="0" />:
         <input id="timeEntry" className="time-input__input time-input__seconds" name="seconds" type="number" placeholder="00" />
-        <button type="submit">Set Time</button>
+        <button type="submit">Set</button>
       </form>
 
-      <div className="control-start-stop">
-        <button onClick={() => setIsRunning(true)}>Start</button>
-        <button onClick={() => setIsRunning(false)}>Stop</button>
+      <div className="start-stop">
+        <button className="start-stop__toggle" onClick={handleToggle}>
+          { isRunning ? 'Stop' : 'Start'}
+        </button>
       </div>
 
-      <button className="control-flip" onClick={handleFlip}>Flip</button>
+      <button className="flip" onClick={handleFlip}>Flip</button>
     </>
   )
 }
