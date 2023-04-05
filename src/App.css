@@ -58,6 +58,10 @@ button:focus-visible {
 }
 
 .sandclock {
+  --hue: 37;
+  --saturation: 56%;
+  --lightness: 65%;
+  --speed: 999ms;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -75,11 +79,6 @@ button:focus-visible {
 
 .sand {
   --percent: 0;
-  --speed: 999ms;
-  --color: #d7af70;
-  --hue: 37;
-  --saturation: 56%;
-  --lightness: 65%;
   background-color: hsl(var(--hue), var(--saturation), var(--lightness));
   position:absolute;
   display: block;
