@@ -8,8 +8,10 @@ import './App.css'
 
 function App() {
   const audioCX = useRef(null)
-  const [timeStart, setTimeStart] = useState(10);
-  const [timeLeft, setTimeLeft] = useState(10);
+  const canvas = useRef(null)
+  const canvasCX = useRef(null)
+  const [timeStart, setTimeStart] = useState(90);
+  const [timeLeft, setTimeLeft] = useState(90);
   const [delay, setDelay] = useState(1000);
   const [isRunning, setIsRunning] = useState(false);
   const timePercent = timeLeft/timeStart;
@@ -30,8 +32,16 @@ function App() {
     audioCX.current = new AudioContext();
   }
 
+  if (!canvas.current) {
+    canvas.current = document.createElement("canvas");
+    canvasCX.current = canvas.current.getContext("2d");
+    grain(canvas.current, canvasCX.current, 256, "--grain-square-black", "hsla(0, 100%, 0%, 1)");
+    grain(canvas.current, canvasCX.current, 256, "--grain-square-white-opacity-blend", "hsla(25, 100%, 96%, 0.1375)");
+    grain(canvas.current, canvasCX.current, 256, "--grain-square-white-opacity-strong", "hsla(25, 100%, 96%, 0.4)");
+  }
+
   useInterval(() => {
-    sand.current.style.setProperty('--speed', '1000ms')
+    sand.current.style.setProperty('--speed', delay + 'ms')
     if (timeLeft > 0) {
       setTimeLeft(timeLeft - 1);
       document.title = minutes + ":" + seconds
@@ -82,28 +92,29 @@ function App() {
 
   function beep() {
     // Cmaj9/E = E3 161.82, C4 256.87, D4 288.33, G4 384.87, B4 484.90
+    // Cmaj9/E+1 = E4 323.63, C5 513.74, D5 576.65, G5 769.74, B5 969.81
     // https://pages.mtu.edu/~suits/notefreq432.html
     const tone1 = audioCX.current.createOscillator()
     const tone2 = audioCX.current.createOscillator()
     const tone3 = audioCX.current.createOscillator()
     const tone4 = audioCX.current.createOscillator()
     const tone5 = audioCX.current.createOscillator()
-    tone1.type = 'triangle'
-    tone2.type = 'triangle'
-    tone3.type = 'triangle'
-    tone4.type = 'triangle'
-    tone5.type = 'triangle'
-    tone1.frequency.setValueAtTime(161.82, audioCX.current.currentTime)
-    tone2.frequency.setValueAtTime(256.87, audioCX.current.currentTime)
-    tone3.frequency.setValueAtTime(288.33, audioCX.current.currentTime)
-    tone4.frequency.setValueAtTime(384.87, audioCX.current.currentTime)
-    tone5.frequency.setValueAtTime(484.90, audioCX.current.currentTime)
+    tone1.type = 'sine'
+    tone2.type = 'sine'
+    tone3.type = 'sine'
+    tone4.type = 'sine'
+    tone5.type = 'sine'
+    tone1.frequency.setValueAtTime(323.63, audioCX.current.currentTime)
+    tone2.frequency.setValueAtTime(513.74, audioCX.current.currentTime)
+    tone3.frequency.setValueAtTime(576.65, audioCX.current.currentTime)
+    tone4.frequency.setValueAtTime(769.74, audioCX.current.currentTime)
+    tone5.frequency.setValueAtTime(969.81, audioCX.current.currentTime)
 
     // keep it from getting muddy
     const compressor = audioCX.current.createDynamicsCompressor();
     compressor.threshold.setValueAtTime(-70, audioCX.current.currentTime);
     compressor.knee.setValueAtTime(10, audioCX.current.currentTime);
-    compressor.ratio.setValueAtTime(70, audioCX.current.currentTime);
+    compressor.ratio.setValueAtTime(20, audioCX.current.currentTime);
     compressor.attack.setValueAtTime(0, audioCX.current.currentTime);
     compressor.release.setValueAtTime(0.25, audioCX.current.currentTime)
 
@@ -134,6 +145,27 @@ function App() {
     tone5.stop(audioCX.current.currentTime + 4)
   }
 
+  function grain(canvas, ctx, size, name, color) {
+    canvas.width = size;
+    canvas.height = size;
+
+    ctx.fillStyle = color;
+
+    for (let x = 0; x < size; x++) {
+      for (let y = 0; y < size; y++) {
+        if (Math.random() > 0.5) {
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+
+      document.documentElement.style.setProperty(name, `url(${url})`);
+    });
+  }
+
   return (
     <>
       <div className="sandclock" ref={sand} style={{'--hue': hue, '--saturation': saturation + "%"}}>
@@ -151,18 +183,23 @@ function App() {
       </div>
 
       <form className="time-input" action="" onSubmit={handleSubmit}>
-        <input id="timeEntry" className="time-input__input time-input__minutes" name="minutes" type="number" placeholder="0" />:
+        <input id="timeEntry" className="time-input__input time-input__minutes" name="minutes" type="number" placeholder="0" />
+        <span className="time-input__separator">:</span>
         <input id="timeEntry" className="time-input__input time-input__seconds" name="seconds" type="number" placeholder="00" />
-        <button type="submit">Set</button>
+        <button className="time-input__button" type="submit">Set</button>
       </form>
 
-      <div className="start-stop">
-        <button className="start-stop__toggle" onClick={handleToggle}>
-          { isRunning ? 'Stop' : 'Start'}
-        </button>
-      </div>
+      <button className="control start-stop" onClick={handleToggle}>
+        <svg className={isRunning ? 'icon hidden' : 'icon visible'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>play</title><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+        <svg className={isRunning ? 'icon visible' : 'icon hidden'} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>
+        { isRunning ? 'Stop' : 'Start'}
+      </button>
 
-      <button className="flip" onClick={handleFlip}>Flip</button>
+      <button className="control flip" onClick={handleFlip}>
+        <svg className="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,4.07V1L8.45,5.55L13,10V6.09C15.84,6.57 18,9.03 18,12C18,14.97 15.84,17.43 13,17.91V19.93C16.95,19.44 20,16.08 20,12C20,7.92 16.95,4.56 13,4.07M7.1,18.32C8.26,19.22 9.61,19.76 11,19.93V17.9C10.13,17.75 9.29,17.41 8.54,16.87L7.1,18.32M6.09,13H4.07C4.24,14.39 4.79,15.73 5.69,16.89L7.1,15.47C6.58,14.72 6.23,13.88 6.09,13M7.11,8.53L5.7,7.11C4.8,8.27 4.24,9.61 4.07,11H6.09C6.23,10.13 6.58,9.28 7.11,8.53Z" /></svg>
+        Flip
+      </button>
+
     </>
   )
 }
