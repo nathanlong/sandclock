@@ -117,6 +117,25 @@ button:focus-visible {
   --percent: 1;
 }
 
+.sand__trickle {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 8px;
+  margin-left: -4px;
+  background-color: red;
+  background-color: hsl(var(--hue), var(--saturation), var(--lightness));
+  background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend);
+  transition: transform 500ms ease-in-out, background-color var(--speed) linear;
+  transform: scaleX(0)
+}
+
+.sand__trickle--active {
+  transform: scaleX(1);
+}
+
 .time-display {
   padding: 1rem 2rem;
   background-color: var(--background);
@@ -231,4 +250,14 @@ button:focus-visible {
 
 .hidden {
   display: none;
+}
+
+.static {
+  animation: static 300ms steps(3) infinite;
+}
+
+@keyframes static {
+ 0% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend)}
+ 50% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend-2)}
+ 100% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend-3)}
 }
