@@ -1,6 +1,7 @@
 :root {
   --sans: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --monospace: SF Mono, Roboto Mono, Consolas, DejaVu Sans Mono, Monaco, Menlo,  monospace;
+  --monospace: SF Mono, Roboto Mono, Consolas, DejaVu Sans Mono, Monaco, Menlo,
+    monospace;
   --color: rgba(255, 255, 255, 0.87);
   --background: #242424;
   --sand-gradient: radial-gradient(
@@ -16,7 +17,7 @@
   );
   --phial-gradient: radial-gradient(
     circle farthest-side at top left,
-    hsl(176 63% 85% / 0.5) 0%, 
+    hsl(176 63% 85% / 0.5) 0%,
     hsl(180 63% 50% / 0.9) 92%
   );
   line-height: 1.5;
@@ -29,7 +30,9 @@
   -webkit-text-size-adjust: 100%;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   margin: 0;
   padding: 0;
 }
@@ -44,7 +47,8 @@ body {
   font-family: var(--sans);
 }
 
-#root, .App {
+#root,
+.App {
   width: 100%;
   text-align: center;
   min-height: 100vh;
@@ -53,7 +57,7 @@ body {
 }
 
 button {
-  border-radius: 10rem;
+  border-radius: 99rem;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
@@ -91,7 +95,8 @@ button:focus-visible {
   height: 50%;
   position: relative;
   background-color: #cbf3f0;
-  background-image: var(--phial-gradient), var(--grain-square-white-opacity-strong);
+  background-image: var(--phial-gradient),
+    var(--grain-square-white-opacity-strong);
   background-blend-mode: overlay;
   flex-grow: 1;
 }
@@ -99,16 +104,18 @@ button:focus-visible {
 .sand {
   --percent: 0;
   background-color: hsl(var(--hue), var(--saturation), var(--lightness));
-  background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend);
+  background-image: var(--sand-gradient),
+    var(--grain-square-white-opacity-blend);
   background-blend-mode: overlay;
-  position:absolute;
+  position: absolute;
   display: block;
   content: "";
-  top:0;
+  top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  transition: transform var(--speed) linear, background-color var(--speed) linear;
+  transition: transform var(--speed) linear,
+    background-color var(--speed) linear;
   transform-origin: bottom;
   transform: scaleY(var(--percent));
 }
@@ -127,9 +134,11 @@ button:focus-visible {
   margin-left: -4px;
   background-color: red;
   background-color: hsl(var(--hue), var(--saturation), var(--lightness));
-  background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend);
-  transition: transform 500ms ease-in-out, background-color var(--speed) linear;
-  transform: scaleX(0)
+  background-image: var(--sand-gradient),
+    var(--grain-square-white-opacity-blend);
+  transition: transform 500ms ease-in-out,
+    background-color var(--speed) linear;
+  transform: scaleX(0);
 }
 
 .sand__trickle--active {
@@ -171,7 +180,7 @@ button:focus-visible {
   top: 50%;
   transform: translateY(-50%);
   display: flex;
-  padding-right: 2rem;
+  padding-right: 3rem;
   flex-direction: column;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
@@ -183,7 +192,7 @@ button:focus-visible {
   top: 50%;
   transform: translateY(-50%);
   display: flex;
-  padding-left: 2rem;
+  padding-left: 3rem;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -237,9 +246,9 @@ button:focus-visible {
   gap: 0.25rem;
   align-items: center;
   justify-content: center;
-  width: 6rem;
-  height: 25vh;
-  height: 25dvh;
+  width: 25vw;
+  max-width: 200px;
+  aspect-ratio: 3/5;
 }
 
 .icon {
@@ -257,7 +266,16 @@ button:focus-visible {
 }
 
 @keyframes static {
- 0% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend)}
- 50% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend-2)}
- 100% { background-image: var(--sand-gradient), var(--grain-square-white-opacity-blend-3)}
+  0% {
+    background-image: var(--sand-gradient),
+      var(--grain-square-white-opacity-blend);
+  }
+  50% {
+    background-image: var(--sand-gradient),
+      var(--grain-square-white-opacity-blend-2);
+  }
+  100% {
+    background-image: var(--sand-gradient),
+      var(--grain-square-white-opacity-blend-3);
+  }
 }
