@@ -1,4 +1,7 @@
+import ConvolverSample from '/audio/waves.mp3'
+
 function beep(audioCX) {
+  console.log(typeof(ConvolverSample))
   // Cmaj9/E+1 = E4 323.63, C5 513.74, D5 576.65, G5 769.74, B5 969.81
   // https://pages.mtu.edu/~suits/notefreq432.html
   const chord = ["323.63", "513.74", "576.65", "769.74", "969.81"];
@@ -19,7 +22,7 @@ function beep(audioCX) {
   let soundSource;
   let ajaxRequest = new XMLHttpRequest();
 
-  ajaxRequest.open("GET", "/audio/waves.mp3", true);
+  ajaxRequest.open("GET", ConvolverSample, true);
   ajaxRequest.responseType = "arraybuffer";
   ajaxRequest.onload = function () {
     const audioData = ajaxRequest.response;
@@ -35,7 +38,7 @@ function beep(audioCX) {
     );
   };
   ajaxRequest.send();
-
+  
   // fade out
   const jumpGain = audioCX.current.createGain();
   jumpGain.gain.setValueAtTime(1.5, audioCX.current.currentTime);
