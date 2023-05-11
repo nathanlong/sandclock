@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import useInterval from './hooks/useInterval'
 import beep from './helpers/beep'
+import bell from './helpers/bell'
 import grain from './helpers/grain'
 
 // TODO:
@@ -54,7 +55,7 @@ function App() {
       setTimeLeft(timeLeft - 1);
       document.title = minutes + ":" + seconds
     } else {
-      beep(audioCX)
+      bell(audioCX)
       setIsRunning(false)
       document.title = "SandClock"
     }
